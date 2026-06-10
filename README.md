@@ -1,65 +1,64 @@
-# 学生毕业 vs 辍学预测（二分类）
+# Student Graduation vs Dropout Prediction (2-Class)
 
-## 项目结构
+Predict whether a higher education student will graduate or drop out, using 5 classification models with full visualization.
+
+## Project Structure
 
 ```
-project/
-├── preprocess.py          # 数据预处理（独热编码 + SMOTE + 标准化）
-├── evaluate.py            # 评估与可视化（混淆矩阵、ROC、对比柱状图）
-├── run_all.py             # 主控脚本
-├── README.md              # 本文件
+├── preprocess.py           # Data preprocessing (one-hot encoding + scaling)
+├── evaluate.py             # Visualizer class (EDA + model-specific + comparison + SHAP)
+├── run_all.py              # Main pipeline
+├── README.md
 ├── models/
 │   ├── __init__.py
-│   ├── logreg.py          # 逻辑回归
-│   ├── rf.py              # 随机森林
-│   ├── svm.py             # 支持向量机
-│   ├── knn.py             # K 近邻
-│   └── mlp.py             # 多层感知机（深度学习）
-└── results/               # 自动生成的结果目录
+│   ├── logreg.py           # Logistic Regression
+│   ├── rf.py               # Random Forest
+│   ├── svm.py              # SVM
+│   ├── knn.py              # K-Nearest Neighbors
+│   └── mlp.py              # MLP (Deep Learning)
+├── results/                # Auto-generated (gitignored)
+└── data.csv                # Dataset (gitignored)
 ```
 
-## 环境要求
-
-- Python 3.10+
-- 依赖安装：
+## Requirements
 
 ```bash
-pip install pandas numpy scikit-learn matplotlib seaborn joblib imbalanced-learn
+pip install pandas numpy scikit-learn matplotlib seaborn joblib shap
 ```
 
-## 使用方法
-
-### 基线模式（快速验证）
+## Usage
 
 ```bash
-cd project
 python run_all.py
 ```
 
-### 优化模式（SMOTE + 超参数调优 + 集成）
+All figures saved to `results/figures/`, summary CSV to `results/results.csv`.
 
-```bash
-cd project
-python run_all.py --optimize
-```
+## Dataset
 
-优化模式下会自动运行基线对比，生成：
-- `results/results_baseline.csv` — 基线结果
-- `results/results_optimized.csv` — 优化结果
-- `results/comparison_baseline_vs_optimized.csv` — 优化前后对比
+[UCI Machine Learning Repository - Predict Students' Dropout and Academic Success](https://archive.ics.uci.edu/dataset/697/predict+students+dropout+and+academic+success)
 
-## 数据
+- 4,424 samples → 3,630 after removing `Enrolled`
+- Target: `Graduate` (0) vs `Dropout` (1)
+- 36 raw features → 155 after one-hot encoding nominal categoricals
 
-数据文件 `data.csv` 请放在项目上级目录（`../data.csv`）或通过 `--data` 参数指定路径。
+## Models
 
-## 模型
+| Model | Type | Special Plots |
+|-------|------|---------------|
+| Logistic Regression | Linear | Coefficients bar + SHAP |
+| Random Forest | Ensemble | Feature importance + SHAP |
+| SVM | Kernel | PCA decision boundary |
+| KNN | Distance | PCA decision regions + K-value curve |
+| MLP | Deep Learning | Loss curve |
 
-| 模型 | 类型 | 超参数（优化时搜索） |
-|------|------|---------------------|
-| Logistic Regression | 线性 | C, solver |
-| Random Forest | 集成 | n_estimators, max_depth |
-| SVM | 核方法 | C, gamma |
-| KNN | 距离 | n_neighbors |
-| MLP | 深度学习 | hidden_layer_sizes, alpha |
+## Output Figures (results/figures/)
 
-优化模式额外包含 VotingClassifier 软投票集成。
+| Category | Files |
+|----------|-------|
+| EDA | `target_distribution.png`, `feature_distributions.png`, `correlation_heatmap.png` |
+| Model-specific | `logreg_coefficients.png`, `rf_feature_importance.png`, `svm_decision_boundary_pca.png`, `knn_decision_regions_pca.png`, `knn_k_values.png`, `mlp_loss_curve.png` |
+| SHAP | `shap_beeswarm_*.png`, `shap_bar_*.png` (RF + LogReg) |
+| Per-model | `cm_*.png` (6x confusion matrices), `roc_*.png` (6x ROC curves) |
+| Comparison | `comparison_metrics.png`, `comparison_roc_curves.png`, `comparison_pr_curves.png`, `comparison_calibration.png`, `comparison_train_time.png`, `confusion_matrices_grid.png` |
+| Learning | `learning_curve_Random_Forest.png`, `learning_curve_MLP.png`, `pairplot_top5_RF.png` |
