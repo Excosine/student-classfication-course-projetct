@@ -1,0 +1,23 @@
+# 生成的结果与缓存
+results/
+*.npy
+*.pkl
+*.csv
+*.png
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE
+.idea/
+*.iml
+*.xml
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
