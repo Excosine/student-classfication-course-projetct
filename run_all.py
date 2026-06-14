@@ -12,7 +12,7 @@ sys.path.insert(0, CURRENT_DIR)
 
 from preprocess import load_and_preprocess
 from evaluate import Visualizer, save_results_csv
-from models import train_logreg, train_rf, train_svm, train_knn, train_mlp
+from models import train_logreg, train_rf, train_svm, train_knn, train_mlp, train_cnn
 
 
 def main():
@@ -32,7 +32,11 @@ def main():
     # ---- 训练（独有图在各模型内部绘制）----
     print("\n>>> Step 3: Training")
     funcs = {"LogReg": train_logreg, "RF": train_rf, "SVM": train_svm,
-             "KNN": train_knn, "MLP": train_mlp}
+             "MLP": train_mlp}
+    if train_knn is not None:
+        funcs["KNN"] = train_knn
+    if train_cnn is not None:
+        funcs["CNN"] = train_cnn
     all_results = []
 
     for key, func in funcs.items():
