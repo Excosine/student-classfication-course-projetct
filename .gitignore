@@ -2,7 +2,7 @@
 results/
 *.npy
 *.pkl
-*.csv
+#*.csv
 *.png
 
 # Python
